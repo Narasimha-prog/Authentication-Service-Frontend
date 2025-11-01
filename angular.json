@@ -2,6 +2,16 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "cli": {
+    "schematicCollections": [
+      "@schematics/angular"
+    ]
+  },
+  "schematics": {
+    "@schematics/angular:service": {
+      "skipTests": false
+    }
+  },
   "projects": {
     "auth_service_frontend": {
       "projectType": "application",

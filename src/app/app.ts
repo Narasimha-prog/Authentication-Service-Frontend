@@ -9,6 +9,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
   styleUrl: './app.scss'
 })
 export class App {
+  
   protected readonly title = signal('auth_service_frontend');
 
   constructor(public oauthService: OAuthService) {}
