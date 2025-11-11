@@ -15,7 +15,6 @@ export class App {
   constructor(public oauthService: OAuthService) {}
 
   login() {
-    
     this.oauthService.initLoginFlow();
   }
 

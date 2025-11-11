@@ -4,11 +4,13 @@ import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
   private platformId = inject(PLATFORM_ID);
 
   constructor(private oauthService: OAuthService) {}
 
   async initAuth(): Promise<void> {
+    
     if (isPlatformBrowser(this.platformId)) {
       console.log('Browser: Initializing real OAuth flow...');
       try {
@@ -18,8 +20,9 @@ export class AuthService {
         console.error('Error loading discovery document:', err);
       }
     } else {
+
       console.log('SSR: using dummy auth data');
-      // Use placeholder or skip login logic
+     
     }
   }
 }
