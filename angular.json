@@ -3,9 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "cli": {
-    "schematicCollections": [
-      "@schematics/angular"
-    ]
+    "schematicCollections": ["@schematics/angular"]
   },
   "schematics": {
     "@schematics/angular:service": {
@@ -28,22 +26,17 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              { "glob": "**/*", "input": "public" }
+            ],
+            "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -67,8 +60,9 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
+
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
@@ -81,23 +75,39 @@
           },
           "defaultConfiguration": "development"
         },
+
+        
+        "serve-ssr": {
+  "builder": "@angular/ssr:dev-server",
+  "options": {
+    "buildTarget": "auth_service_frontend:build"
+  },
+  "configurations": {
+    "development": {
+      "buildTarget": "auth_service_frontend:build:development"
+    },
+    "production": {
+      "buildTarget": "auth_service_frontend:build:production"
+    }
+  },
+  "defaultConfiguration": "development"
+}
+,
+       
+
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
+
         "test": {
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+              { "glob": "**/*", "input": "public" }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           }
         }
       }
