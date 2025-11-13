@@ -2,7 +2,6 @@
   "name": "auth-service-frontend",
   "version": "0.0.0",
   "scripts": {
-    "dev:ssr": "ng run auth_service_frontend:serve-ssr",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -29,16 +28,15 @@
     "@angular/core": "^20.3.0",
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
-    "@angular/platform-server": "^20.3.10",
+    "@angular/platform-server": "^20.3.0",
     "@angular/router": "^20.3.0",
-    "@angular/ssr": "^20.3.9",
-    "angular-oauth2-oidc": "^20.0.2",
+    "@angular/ssr": "^20.3.3",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.9",
+    "@angular/build": "^20.3.3",
     "@angular/cli": "^20.3.3",
     "@angular/compiler-cli": "^20.3.0",
     "@types/express": "^5.0.1",
