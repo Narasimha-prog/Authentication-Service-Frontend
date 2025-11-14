@@ -12,7 +12,7 @@ export class AuthService {
     private oauthService: OAuthService
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-  }
+  } 
 
   async initAuth(): Promise<void> {
     if (this.isBrowser) {
