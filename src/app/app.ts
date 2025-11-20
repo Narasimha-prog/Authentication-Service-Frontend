@@ -1,25 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthService } from './auth/service/auth';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,CommonModule],
+  standalone: true,
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
 export class App {
-  
-  protected readonly title = signal('auth_service_frontend');
+  title = signal('auth_service_frontend');
 
-  constructor(public oauthService: OAuthService) {}
+  // User signal, initially null
+  user = signal<any | null>(null);
+
+  constructor(private authService: AuthService) {
+    // Fetch current user from server on load
+    this.loadUser();
+  }
+
+  async loadUser() {
+    try {
+      const user = await this.authService.getUser().toPromise();
+      this.user.set(user);
+    } catch {
+      this.user.set(null);
+    }
+  }
 
   login() {
-    this.oauthService.initLoginFlow();
+    this.authService.login(); // redirects to server login
   }
 
   logout() {
-    this.oauthService.logOut();
+    this.authService.logout(); // redirects to server logout
   }
 }

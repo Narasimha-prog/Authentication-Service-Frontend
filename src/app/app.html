@@ -1,15 +1,18 @@
 <div class="app-container">
   <h1>{{ title() }}</h1>
 
-  <div *ngIf="!oauthService.hasValidAccessToken(); else loggedIn">
+  <!-- Show if not logged in -->
+  <div *ngIf="!(user() | async); else loggedIn">
     <p>You are not logged in.</p>
     <button (click)="login()">Login</button>
   </div>
 
+  <!-- Template shown if logged in -->
   <ng-template #loggedIn>
-    <p>✅ Logged in as {{ oauthService.getIdentityClaims()?.['sub'] || 'unknown user' }}</p>
+    <p>✅ Logged in as {{ user()?.name }}</p>
     <button (click)="logout()">Logout</button>
   </ng-template>
 
   <router-outlet></router-outlet>
 </div>
+

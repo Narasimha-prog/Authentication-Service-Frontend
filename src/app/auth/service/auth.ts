@@ -1,30 +1,20 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  
-  private isBrowser: boolean;
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    @Inject(PLATFORM_ID) platformId: Object,
-    private oauthService: OAuthService
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  } 
+  getUser(): Observable<any> {
+    return this.http.get('/api/me'); // server returns user info if logged in
+  }
 
-  async initAuth(): Promise<void> {
-    if (this.isBrowser) {
-      console.log('Browser: Initializing real OAuth flow...');
-      try {
-        await this.oauthService.loadDiscoveryDocumentAndTryLogin();
-        console.log('OAuth initialized in browser');
-      } catch (err) {
-        console.error('Error loading discovery document:', err);
-      }
-    } else {
-      console.log('SSR: using dummy auth data');
-    }
+  login(): void {
+    window.location.href = '/login'; // server handles OAuth redirect
+  }
+
+  logout(): void {
+    window.location.href = '/logout'; // server destroys session
   }
 }

@@ -1,0 +1,23 @@
+{
+  "/api": {
+    "target": "http://localhost:4000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/login": {
+    "target": "http://localhost:4000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/callback": {
+    "target": "http://localhost:4000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/logout": {
+    "target": "http://localhost:4000",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
