@@ -8,6 +8,7 @@ export const serverEnvironment = {
     grant_type: "authorization_code",
     redirect_uri: "http://localhost:4000/auth/callback",
      scopes: "openid profile"
-,    issuer: "http://localhost:7878"
+,    issuer: "http://localhost:7878",
+
   }
 };

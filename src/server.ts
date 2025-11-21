@@ -4,6 +4,7 @@ import express from 'express';
 import session from 'express-session';
 import { Issuer } from 'openid-client';
 import { join } from 'path';
+import axios from "axios";
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -48,6 +49,9 @@ const client = new oidcIssuer.Client({
 app.get('/login', (req, res) => {
   const url = client.authorizationUrl({
     scope: serverEnvironment.oauth.scopes,
+    client_id: serverEnvironment.oauth.client_id,
+    redirect_uri: serverEnvironment.oauth.redirect_uri,
+    response_type: 'code',
   });
 
   res.redirect(url);
@@ -57,42 +61,59 @@ app.get('/login', (req, res) => {
 
 app.get("/auth/callback", async (req, res) => {
   try {
-    const code = req.query['code'] as string;
+    const rawCode = req.query["code"];
 
-    if (!code) {
-      return res.status(400).send("Missing authorization code");
+    // Validate type
+    if (typeof rawCode !== "string") {
+      return res.status(400).send("Invalid authorization code");
     }
 
-    const tokenPayload = new URLSearchParams({
-      grant_type: "authorization_code",
-      code: code,
-      redirect_uri: serverEnvironment.oauth.redirect_uri,
-      client_id: serverEnvironment.oauth.client_id,
-      client_secret: serverEnvironment.oauth.client_secret
-    });
+    const code: string = rawCode;
 
-    const tokenResponse = await fetch(`${serverEnvironment.oauth.issuer}/oauth2/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: tokenPayload
-    });
+    const token = await exchangeAuthCodeForToken(code);
 
-    const tokenSet = await tokenResponse.json();
-
-    // Decode user info
-    const user = parseJwt(tokenSet.id_token);
-
-    req.session.user = user;
-    req.session.tokenSet = tokenSet;
-
-    console.log("Logged in user:", user);
-
-    res.redirect("/");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("OAuth callback failed");
+    return res.json({ token });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error");
   }
 });
+
+
+
+async function exchangeAuthCodeForToken(code: string) {
+  const tokenUrl = `${serverEnvironment.oauth.issuer}/oauth2/token`;
+
+  try {
+    const response = await axios.post(
+      tokenUrl,
+      new URLSearchParams({
+        grant_type: "authorization_code",
+        code: code,
+        redirect_uri: serverEnvironment.oauth.redirect_uri
+       
+      })
+      ,{
+        auth: {
+          username: serverEnvironment.oauth.client_id,
+          password: serverEnvironment.oauth.client_secret,
+        },
+      
+    
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    return response.data; // access_token, id_token, refresh_token…
+  } catch (err: any) {
+    console.error("❌ Token exchange error:", err.response?.data || err);
+    throw err;
+  }
+}
+
+
 
 function parseJwt(token: string) {
   const base64 = token.split('.')[1];
